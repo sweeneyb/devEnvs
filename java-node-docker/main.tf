@@ -10,7 +10,7 @@ resource "random_id" "project" {
 resource "google_compute_project_metadata" "ssh_key" {
   project = google_project.dev-project.project_id
   metadata = {
-	ssh-keys = join(":", ["user", tls_private_key.ssh_key.public_key_openssh])
+	ssh-keys = join(":", [var.username, tls_private_key.ssh_key.public_key_openssh])
   }
 }
 
@@ -114,6 +114,10 @@ output "ip_addrs" {
 
 output "ssh_public_key" {
   value = tls_private_key.ssh_key.public_key_openssh
+}
+
+output "username" {
+ value = var.username
 }
 
 
