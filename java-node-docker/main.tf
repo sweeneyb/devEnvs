@@ -99,6 +99,8 @@ resource "google_compute_firewall" "dev-ports" {
     ports    = ["8080"]
   }
 
+  source_ranges = ["0.0.0.0/0"]
+
   depends_on = [
     google_project_service.compute_api
   ]
