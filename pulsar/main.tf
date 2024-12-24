@@ -66,7 +66,7 @@ resource "google_compute_instance" "vm" {
   boot_disk {
     initialize_params {
       type  = "pd-standard"
-      image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2004-lts"
+      image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts-amd64"
       size  = var.boot_disk_size
     }
   }

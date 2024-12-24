@@ -3,7 +3,9 @@
 ```
 git clone https://github.com/sweeneyb/devEnvs
 cd devEnvs/java-node-docker
+
 gcloud auth application-default login
+
 terraform init
 terraform plan
 terraform apply
