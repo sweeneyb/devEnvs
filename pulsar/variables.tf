@@ -2,7 +2,6 @@ variable "proj_id" {
   type    = string
 }
 
-
 variable "boot_disk_size" {
     type = number
     default = "40"
@@ -11,4 +10,16 @@ variable "boot_disk_size" {
 variable "username" {
     type = string
     default = "user"
+}
+
+variable ts_api_key {
+  type = string
+  sensitive = true
+  ephemeral = true
+}
+
+variable tailnet {
+  type = string
+  sensitive = true
+  ephemeral = true
 }

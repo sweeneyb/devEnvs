@@ -34,6 +34,7 @@ resource "google_project" "dev-project" {
   name       = "${var.proj_id}-${random_id.project.hex}"
   project_id = "${var.proj_id}-${random_id.project.hex}"
   billing_account = data.google_billing_account.acct.id
+  deletion_policy = "DELETE"
 }
 
 # something is odd here; i had to enable the compute api by hand
@@ -56,8 +57,8 @@ data "template_file" "cloud-config" {
 
 }
 
-resource "google_compute_instance" "vm" {
-  name         = "dev-machine"
+resource "google_compute_instance" "vm-001" {
+  name         = "pulsar-001"
   project = google_project.dev-project.project_id
   machine_type = "e2-standard-2"
   zone         = "us-east1-b"
@@ -113,7 +114,7 @@ resource "google_compute_firewall" "dev-ports" {
 
 // OUTPUTS  
 output "ip_addrs" { 
-  value = google_compute_instance.vm.network_interface.0.access_config.0.nat_ip
+  value = google_compute_instance.vm-001.network_interface.0.access_config.0.nat_ip
 }
 
 output "ssh_public_key" {
