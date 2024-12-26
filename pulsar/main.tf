@@ -1,6 +1,8 @@
-provider "google" {
-  user_project_override = true
-}
+
+#provider "google" {
+#  user_project_override = true
+#}
+
 
 resource "random_id" "project" {
   keepers = {
@@ -14,8 +16,11 @@ resource "random_id" "project" {
 resource "google_compute_project_metadata" "ssh_key" {
   project = google_project.dev-project.project_id
   metadata = {
-	ssh-keys = join(":", [var.username, tls_private_key.ssh_key.public_key_openssh])
+	  ssh-keys = join(":", [var.username, tls_private_key.ssh_key.public_key_openssh])
   }
+  depends_on = [
+    google_project_service.compute_api
+  ]
 }
 
 resource "tls_private_key" "ssh_key" {
@@ -59,6 +64,18 @@ resource "google_project_service" "iam_api" {
 resource "google_project_service" "serviceusage" {
   project = google_project.dev-project.project_id
   service = "serviceusage.googleapis.com"
+  disable_dependent_services = true
+}
+
+resource "google_project_service" "cloudresourcemanager" {
+  project = google_project.dev-project.project_id
+  service = "cloudresourcemanager.googleapis.com"
+  disable_dependent_services = true
+}
+
+resource "google_project_service" "billingbudgets" {
+  project = google_project.dev-project.project_id
+  service = "billingbudgets.googleapis.com"
   disable_dependent_services = true
 }
 
