@@ -23,3 +23,12 @@ variable tailnet {
   sensitive = true
   ephemeral = true
 }
+
+variable host_prefix {
+  type = string
+}
+
+variable cluster_size {
+  type = number
+  default = 1
+}

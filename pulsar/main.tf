@@ -52,13 +52,9 @@ resource "google_project_service" "iam_api" {
   disable_dependent_services = true
 }
 
-data "template_file" "cloud-config" {
-  template = file("cloud-init.tmpl")
-
-}
-
-resource "google_compute_instance" "vm-001" {
-  name         = "pulsar-001"
+resource "google_compute_instance" "VMs" {
+  count = var.cluster_size
+  name         = "${var.host_prefix}${format("-%03s", count.index+1)}"
   project = google_project.dev-project.project_id
   machine_type = "e2-standard-2"
   zone         = "us-east1-b"
@@ -74,13 +70,14 @@ resource "google_compute_instance" "vm-001" {
 
   network_interface {
     network = "default"
-    access_config {
-      // Ephemeral IP
-    }
+    // If you need a public IP, uncomment this.
+    // access_config {
+    //   // Ephemeral IP
+    // }
   }
 
   metadata = {
-    user-data                 = data.template_file.cloud-config.rendered
+    user-data                  = templatefile("cloud-init.tftpl", {KEY = tailscale_tailnet_key.vm_keys[count.index].key})
     #google-logging-enabled    = true
     #google-monitoring-enabled = true
   }
@@ -90,32 +87,14 @@ resource "google_compute_instance" "vm-001" {
   ]
 }
 
-resource "google_compute_firewall" "dev-ports" {
-  name    = "allow-dev-traffic"
-  project = google_project.dev-project.project_id
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["8080"]
-  }
-  allow {
-    protocol = "tcp"
-    ports    = ["8090"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-
-  depends_on = [
-    google_project_service.compute_api
-  ]
-}
-
 
 // OUTPUTS  
-output "ip_addrs" { 
-  value = google_compute_instance.vm-001.network_interface.0.access_config.0.nat_ip
-}
+// If you need a public IP, uncomment this.
+// output "public_ip_addrs" { 
+//   value = google_compute_instance.VMs.network_interface.0.access_config.0.nat_ip
+// }
+
+
 
 output "ssh_public_key" {
   value = tls_private_key.ssh_key.public_key_openssh
