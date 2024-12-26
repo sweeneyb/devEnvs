@@ -32,3 +32,7 @@ variable cluster_size {
   type = number
   default = 1
 }
+
+variable notification_gchat_space_id {
+  type = string
+}

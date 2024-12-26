@@ -14,3 +14,9 @@ terraform destory -var-file=variables.tfvars
 
 to see the tailscale key:
 terraform output key
+
+
+
+# TODO
+# user isn't in the docker group
+sudo usermod -aG docker $USER

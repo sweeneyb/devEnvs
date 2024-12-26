@@ -1,3 +1,7 @@
+provider "google" {
+  user_project_override = true
+}
+
 resource "random_id" "project" {
   keepers = {
     # Generate a new id each time we switch to a new AMI id
@@ -49,6 +53,12 @@ resource "google_project_service" "iam_api" {
   project = google_project.dev-project.project_id
   service = "iam.googleapis.com"
 
+  disable_dependent_services = true
+}
+
+resource "google_project_service" "serviceusage" {
+  project = google_project.dev-project.project_id
+  service = "serviceusage.googleapis.com"
   disable_dependent_services = true
 }
 
