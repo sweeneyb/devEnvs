@@ -21,14 +21,14 @@ resource "tailscale_tailnet_key" "vm_keys" {
   preauthorized = true
   expiry        = 3600
   description   = "terraform generated auth key for ${var.host_prefix}${format("-%03s", count.index+1)}"
-  tags          = ["${var.host_prefix}${format("-%03s", count.index+1)}"]
+  # tags          = ["${var.host_prefix}${format("-%03s", count.index+1)}"]
 
 }
 
 data "tailscale_device" "provisioned_device" {
   count    = var.cluster_size
-  name     = "${var.host_prefix}${format("-%03s", count.index+1)}"
-  wait_for = "60s"
+  hostname     = "${var.host_prefix}${format("-%03s", count.index+1)}"
+  wait_for = "20s"
 }
 
 #output "devices" {

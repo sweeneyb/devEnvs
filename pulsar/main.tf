@@ -12,6 +12,10 @@ resource "google_compute_project_metadata" "ssh_key" {
   metadata = {
 	ssh-keys = join(":", [var.username, tls_private_key.ssh_key.public_key_openssh])
   }
+
+  depends_on = [
+    google_compute_instance.VMs
+  ]
 }
 
 resource "tls_private_key" "ssh_key" {
@@ -71,9 +75,9 @@ resource "google_compute_instance" "VMs" {
   network_interface {
     network = "default"
     // If you need a public IP, uncomment this.
-    // access_config {
-    //   // Ephemeral IP
-    // }
+    access_config {
+      // Ephemeral IP
+    }
   }
 
   metadata = {
@@ -90,9 +94,9 @@ resource "google_compute_instance" "VMs" {
 
 // OUTPUTS  
 // If you need a public IP, uncomment this.
-// output "public_ip_addrs" { 
-//   value = google_compute_instance.VMs.network_interface.0.access_config.0.nat_ip
-// }
+output "public_ip_addrs" { 
+  value = google_compute_instance.VMs.*.network_interface.0.access_config.0.nat_ip
+}
 
 
 
