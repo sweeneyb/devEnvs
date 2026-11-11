@@ -5,3 +5,4 @@ terraform.tfstate*
 id_rsa
 */id_rsa*
 */*.tfvars
+*.conf
